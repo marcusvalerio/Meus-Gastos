@@ -1,43 +1,905 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano Alimentar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; }
-        .glass-card { background: rgba(28, 28, 30, 0.8); border: 1px solid rgba(255,255,255,0.05); }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Dieta"/>
+<meta name="theme-color" content="#0b0d12"/>
+
+<title>Plano Alimentar</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<style>
+/* =========================
+   🌑 APPLE DARK PREMIUM
+========================= */
+:root{
+
+  --bg:#0b0d12;
+
+  --surface:rgba(255,255,255,0.04);
+  --surface2:rgba(255,255,255,0.06);
+
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.10);
+
+  --text:#e9e6df;
+  --text-dim:#8b90a0;
+  --text-faint:#4a5160;
+
+  --gold:#c9a84c;
+  --green:#6fbf8a;
+  --blue:#7eb8d4;
+
+  --mono:'DM Mono', monospace;
+
+  --shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+}
+
+/* APP ENTRY */
+#app{
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  animation: fadeIn .4s ease-out;
+}
+
+/* =========================
+   ✨ ANIMAÇÕES
+========================= */
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes press{
+  0%{transform:scale(1)}
+  50%{transform:scale(0.97)}
+  100%{transform:scale(1)}
+}
+
+/* =========================
+   HEADER (APPLE STYLE)
+========================= */
+.hdr{
+  padding:calc(env(safe-area-inset-top) + 14px) 20px 0;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:linear-gradient(180deg,#141c2e 0%, transparent 100%);
+  backdrop-filter: blur(18px);
+}
+
+.hdr-title{
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-size:18px;
+  font-weight:600;
+}
+
+/* =========================
+   CARDS PREMIUM FEEL
+========================= */
+.card,
+.stat-card,
+.recipe-card,
+.prep-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  animation: fadeUp .35s ease-out;
+  transition:all .25s ease;
+}
+
+.card:active,
+.stat-card:active,
+.recipe-card:active{
+  transform:scale(0.985);
+}
+
+/* hover depth */
+.card:hover{
+  transform:translateY(-1px);
+}
+
+/* =========================
+   BUTTON / TOUCH FEEL
+========================= */
+button{
+  transition:all .2s ease;
+}
+
+button:active{
+  transform:scale(0.96);
+}
+
+/* =========================
+   ROW INTERACTION (TOUCH)
+========================= */
+.row{
+  transition:all .2s ease;
+}
+
+.row:active{
+  transform:scale(0.99);
+  background:rgba(255,255,255,0.03);
+}
+
+/* =========================
+   CHECKBOX MICRO INTERACTION
+========================= */
+.chkbox{
+  width:20px;
+  height:20px;
+  border-radius:7px;
+  border:1px solid var(--border2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .25s ease;
+}
+
+.chkbox.chk{
+  background:var(--green);
+  transform:scale(1.08);
+  box-shadow:0 0 0 5px rgba(111,191,138,0.08);
+}
+
+/* =========================
+   TABS (APPLE NAV FEEL)
+========================= */
+.tab-btn{
+  transition:all .25s ease;
+}
+
+.tab-btn.active{
+  color:var(--gold);
+  text-shadow:0 0 20px rgba(201,168,76,0.25);
+}
+
+/* =========================
+   SCROLL TRANSITION
+========================= */
+.scroll{
+  animation: fadeIn .25s ease-out;
+}
+
+/* =========================
+   RIPPLE EFFECT BASE
+========================= */
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  transform:scale(0);
+  animation:rippleAnim .6s ease-out;
+  pointer-events:none;
+}
+
+@keyframes rippleAnim{
+  to{
+    transform:scale(20);
+    opacity:0;
+  }
+}
+
+/* =========================
+   DARK GLASS HEADER
+========================= */
+.hdr{
+  backdrop-filter: blur(20px);
+}
+
+/* =========================
+   GRAPH ANIMATION
+========================= */
+svg polyline{
+  stroke-dasharray:1000;
+  stroke-dashoffset:1000;
+  animation:draw 1.2s ease forwards;
+}
+
+@keyframes draw{
+  to{stroke-dashoffset:0}
+}
+
+/* =========================
+   SAFE TOUCH UX
+========================= */
+*{
+  -webkit-tap-highlight-color:transparent;
+}
+</style>
 </head>
-<body class="pb-24">
 
-    <!-- Conteúdo da Home -->
-    <main id="home" class="p-6">
-        <h1 class="text-sm text-gray-500 font-bold uppercase tracking-widest">Plano Alimentar</h1>
-        <h2 class="text-4xl font-bold mb-8">Home</h2>
-        
-        <!-- Exemplo de Card Premium -->
-        <div class="glass-card rounded-3xl p-6 mb-4">
-            <p class="text-gray-400 text-xs font-semibold uppercase">Streak</p>
-            <p class="text-2xl font-bold mt-1">0 🔥</p>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================
+   ⚡ MICRO INTERAÇÕES (RIPPLE + HAPTIC)
+========================= */
+document.addEventListener("click",(e)=>{
+
+  const el = e.target.closest(".row, .card, button, .tab-btn");
+  if(!el) return;
+
+  /* ripple */
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+
+  const rect = el.getBoundingClientRect();
+  ripple.style.left = (e.clientX - rect.left) + "px";
+  ripple.style.top = (e.clientY - rect.top) + "px";
+
+  el.style.position="relative";
+  el.style.overflow="hidden";
+
+  el.appendChild(ripple);
+
+  setTimeout(()=>ripple.remove(),600);
+
+  /* haptic (iPhone) */
+  if(navigator.vibrate){
+    navigator.vibrate(8);
+  }
+});
+
+/* =========================
+   🌙 AUTO DARK FEEL (base visual hook)
+========================= */
+const hour = new Date().getHours();
+if(hour >= 18 || hour <= 6){
+  document.documentElement.style.setProperty('--bg','#07080c');
+}
+</script>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const DAYS=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+const MEALS={
+  Segunda:{"Café da Manhã":[{item:"Ovos mexidos",qty:"3 unidades"},{item:"Pão integral",qty:"2 fatias"},{item:"Café preto",qty:"200ml"}],"Almoço":[{item:"Frango grelhado",qty:"200g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Feijão",qty:"2 conchas"},{item:"Salada de folhas",qty:"à vontade"}],"Lanche da Tarde":[{item:"Banana",qty:"1 unidade"},{item:"Iogurte zero",qty:"170g"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Frango assado com temperos",qty:"200g"},{item:"Batata-doce cozida",qty:"150g"},{item:"Brócolis refogado",qty:"100g"}]},
+  Terça:{"Café da Manhã":[{item:"Omelete de frango",qty:"3 ovos + 80g frango"},{item:"Café preto",qty:"200ml"}],"Almoço":[{item:"Frango desfiado refogado",qty:"200g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Feijão",qty:"2 conchas"},{item:"Couve refogada",qty:"100g"}],"Lanche da Tarde":[{item:"Iogurte zero",qty:"170g"},{item:"Amendoim",qty:"30g"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Frango grelhado",qty:"180g"},{item:"Macarrão integral",qty:"80g seco"},{item:"Molho de tomate caseiro",qty:"3 col. de sopa"}]},
+  Quarta:{"Café da Manhã":[{item:"Tapioca com ovo mexido",qty:"2 unidades + 2 ovos"},{item:"Café com leite desnatado",qty:"200ml"}],"Almoço":[{item:"Frango grelhado",qty:"200g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Feijão",qty:"2 conchas"},{item:"Cenoura e beterraba ralada",qty:"100g"}],"Lanche da Tarde":[{item:"Iogurte zero",qty:"170g"},{item:"Banana",qty:"1 unidade"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Omelete de 3 ovos com legumes",qty:"1 porção"},{item:"Espinafre refogado",qty:"100g"},{item:"Pão integral",qty:"1 fatia"}]},
+  Quinta:{"Café da Manhã":[{item:"Mingau de aveia com banana",qty:"200ml"},{item:"Ovos cozidos",qty:"2 unidades"},{item:"Café preto",qty:"200ml"}],"Almoço":[{item:"Frango assado com alho",qty:"200g"},{item:"Purê de batata-doce",qty:"150g"},{item:"Vagem refogada",qty:"100g"},{item:"Salada de tomate e pepino",qty:"à vontade"}],"Lanche da Tarde":[{item:"Iogurte zero",qty:"170g"},{item:"Mel",qty:"1 col. de chá"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Frango grelhado",qty:"200g"},{item:"Arroz integral",qty:"3 col. de sopa"},{item:"Abobrinha grelhada",qty:"120g"}]},
+  Sexta:{"Café da Manhã":[{item:"Panqueca de aveia e ovo",qty:"3 unidades (2 ovos)"},{item:"Mel",qty:"1 col. de chá"},{item:"Café preto",qty:"200ml"}],"Almoço":[{item:"Frango grelhado",qty:"200g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Feijão",qty:"2 conchas"},{item:"Alface e rúcula",qty:"à vontade"}],"Lanche da Tarde":[{item:"Iogurte zero com granola",qty:"170g + 20g"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Frango assado com ervas",qty:"200g"},{item:"Batata-doce assada",qty:"150g"},{item:"Chuchu refogado",qty:"100g"}]},
+  Sábado:{"Café da Manhã":[{item:"Ovos estrelados",qty:"3 unidades"},{item:"Tapioca",qty:"1 unidade"},{item:"Suco de laranja natural",qty:"200ml"}],"Almoço":[{item:"Frango grelhado (churrasco)",qty:"250g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Vinagrete",qty:"100g"},{item:"Feijão",qty:"2 conchas"}],"Lanche da Tarde":[{item:"Iogurte zero",qty:"170g"},{item:"Amendoim",qty:"30g"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Salada com frango desfiado",qty:"1 bowl grande"},{item:"Azeite e limão",qty:"a gosto"},{item:"Pão integral",qty:"2 fatias"}]},
+  Domingo:{"Café da Manhã":[{item:"Vitamina de banana com aveia e ovo",qty:"300ml"},{item:"Torrada integral",qty:"2 unidades"},{item:"Requeijão light",qty:"1 col. de sopa"}],"Almoço":[{item:"Frango ao molho (tomate + alho)",qty:"200g"},{item:"Arroz integral",qty:"4 col. de sopa"},{item:"Feijão",qty:"2 conchas"},{item:"Farofa de mandioca light",qty:"2 colheres"}],"Lanche da Tarde":[{item:"Iogurte zero com frutas picadas",qty:"170g + 80g"},{item:"Creatina",qty:"5g (1 dose)"}],"Jantar":[{item:"Omelete de frango e queijo",qty:"3 ovos + 80g frango"},{item:"Legumes assados (berinjela, pimentão)",qty:"150g"},{item:"Arroz integral",qty:"3 col. de sopa"}]},
+};
+const MEAL_ORDER=["Café da Manhã","Almoço","Lanche da Tarde","Jantar"];
+const MEAL_ICONS={"Café da Manhã":"☕","Almoço":"🍽️","Lanche da Tarde":"🍎","Jantar":"🌙"};
+const SHOPPING=[
+  {cat:"🍗 Proteínas",color:"#c9a84c",items:[{item:"Peito de frango",qty:"2,5 kg",tip:"Base da semana toda"},{item:"Ovos",qty:"2 dúzias",tip:"Café, omelete e panqueca"},{item:"Atum em lata",qty:"2 latas",tip:"Salada do sábado"},{item:"Tilápia ou sardinha",qty:"400g",tip:"Opção de jantar"}]},
+  {cat:"🥛 Laticínios",color:"#7eb8d4",items:[{item:"Iogurte zero",qty:"7 unidades",tip:"1 por dia no lanche"},{item:"Requeijão light",qty:"1 pote",tip:"Café de domingo"},{item:"Leite desnatado",qty:"500ml",tip:"Café de quarta"}]},
+  {cat:"🍚 Carboidratos",color:"#b5a87a",items:[{item:"Arroz integral",qty:"1 kg",tip:"Toda semana"},{item:"Feijão",qty:"500g",tip:"Cozinhar em quantidade"},{item:"Batata-doce",qty:"1 kg",tip:"Pré/pós treino"},{item:"Pão integral",qty:"1 pacote",tip:"Café e lanches"},{item:"Aveia em flocos",qty:"500g",tip:"Mingau e panqueca"},{item:"Tapioca (goma)",qty:"500g",tip:"Quarta e sábado"},{item:"Macarrão integral",qty:"500g",tip:"Jantar de terça"}]},
+  {cat:"🥦 Legumes e Verduras",color:"#6fbf8a",items:[{item:"Brócolis",qty:"1 cabeça",tip:"Jantar segunda"},{item:"Abobrinha",qty:"2 unidades",tip:"Versátil e barata"},{item:"Chuchu",qty:"2 unidades",tip:"Jantar sexta"},{item:"Couve",qty:"1 maço",tip:"Almoço terça"},{item:"Cenoura",qty:"3 unidades",tip:"Almoço quarta"},{item:"Tomate",qty:"4 unidades",tip:"Salada e molho"},{item:"Alface e rúcula",qty:"1 pé cada",tip:"Saladas"},{item:"Pepino",qty:"2 unidades",tip:"Salada quinta"},{item:"Berinjela",qty:"1 unidade",tip:"Domingo"},{item:"Pimentão",qty:"2 unidades",tip:"Domingo"}]},
+  {cat:"🍌 Frutas",color:"#d4a44c",items:[{item:"Banana",qty:"1 cacho (6-8)",tip:"Lanche e vitamina"},{item:"Mamão",qty:"1 unidade",tip:"Café terça"},{item:"Maçã",qty:"3 unidades",tip:"Lanches"},{item:"Laranja",qty:"4 unidades",tip:"Suco sábado"}]},
+  {cat:"🧂 Temperos e Extras",color:"#9a8fa0",items:[{item:"Alho",qty:"1 cabeça",tip:"Tempero base"},{item:"Azeite de oliva",qty:"1 vidro pequeno",tip:"Com moderação"},{item:"Molho de tomate",qty:"1 lata",tip:"Jantar terça"},{item:"Amendoim torrado sem sal",qty:"200g",tip:"Lanches baratos"},{item:"Mel",qty:"1 pote pequeno",tip:"Panqueca e iogurte"},{item:"Granola sem açúcar",qty:"200g",tip:"Iogurte sexta"},{item:"Creatina monohidratada",qty:"ver estoque",tip:"5g/dia no lanche"},{item:"Café",qty:"1 pacote",tip:"Diário"}]},
+];
+const FIN_CATS=["🍗 Proteína","🥦 Vegetal","🍚 Carboidrato","🥛 Laticínio","🍌 Fruta","🧂 Tempero","🧹 Outros"];
+const PREP_ITEMS=[
+  {name:"Frango cozido/desfiado",unit:"porções (200g)"},
+  {name:"Arroz integral",unit:"porções (4 col.)"},
+  {name:"Feijão",unit:"porções (2 conchas)"},
+  {name:"Batata-doce assada",unit:"porções (150g)"},
+  {name:"Ovos cozidos",unit:"unidades"},
+  {name:"Molho de tomate",unit:"porções (3 col.)"},
+];
+const RECIPES=[
+  {name:"Frango Grelhado com Ervas",cat:"Proteína",freeze:true,ingr:"200g peito de frango · azeite · alho · sal · pimenta · ervas a gosto",steps:["Bata levemente o frango para espessar uniforme.","Tempere com alho amassado, sal, pimenta e ervas. Deixe marinar 15 min.","Grelhe em frigideira quente com fio de azeite, 5 min cada lado.","Descanse 3 min antes de cortar."],tip:"Para congelar: prepare em lote, embale em porções de 200g. Dura 3 meses no freezer."},
+  {name:"Omelete de Frango e Queijo",cat:"Proteína",freeze:false,ingr:"3 ovos · 80g frango desfiado · 1 fatia queijo · sal · pimenta · azeite",steps:["Bata os ovos com sal e pimenta.","Aqueça frigideira antiaderente com fio de azeite.","Despeje os ovos, distribua o frango e o queijo na metade.","Dobre ao meio quando as bordas firmarem. Sirva imediatamente."],tip:"Use frango já cozido do lote semanal para agilizar."},
+  {name:"Panqueca de Aveia e Ovo",cat:"Café da Manhã",freeze:true,ingr:"2 ovos · 3 col. sopa aveia · 1 banana madura · pitada de sal",steps:["Amasse a banana com garfo até virar pasta.","Misture ovos, aveia e banana. Deixe repousar 3 min.","Cozinhe em frigideira antiaderente, 2 min por lado.","Sirva com mel ou iogurte zero."],tip:"Congele as panquecas prontas entre folhas de papel. Reaqueça na frigideira seca."},
+  {name:"Batata-doce Assada em Lote",cat:"Carboidrato",freeze:true,ingr:"1 kg batata-doce · sal grosso · azeite opcional",steps:["Lave bem as batatas sem descascar.","Corte ao meio no sentido do comprimento.","Tempere com sal grosso. Forno a 200°C por 35-40 min.","Deixe esfriar completamente antes de embalar."],tip:"Dura 1 semana na geladeira ou 2 meses no freezer."},
+  {name:"Arroz Integral Temperado",cat:"Carboidrato",freeze:true,ingr:"2 xícaras arroz integral · 4 xícaras água · alho · sal · azeite",steps:["Refogue alho amassado no azeite por 1 min.","Adicione o arroz e toste por 2 min mexendo.","Adicione água quente e sal. Tampe. Cozinhe 35-40 min fogo baixo.","Desligue e descanse 5 min."],tip:"Congele em porções de 4 col. de sopa. Dura 3 meses."},
+  {name:"Feijão Temperado",cat:"Carboidrato",freeze:true,ingr:"500g feijão · 1 cebola · 3 dentes alho · sal · louro · azeite",steps:["Deixe o feijão de molho por 8h. Escorra.","Panela de pressão com água e louro por 20 min.","Refogue cebola e alho, adicione ao feijão cozido.","Tempere e cozinhe aberto 10 min para encorpar."],tip:"Congele em porções de 2 conchas. Dura 3 meses."},
+  {name:"Frango Desfiado em Lote",cat:"Proteína",freeze:true,ingr:"1 kg peito de frango · 1 limão · sal · alho · pimenta",steps:["Cozinhe na pressão com água, sal e alho por 20 min.","Deixe esfriar na própria água.","Desfie com dois garfos.","Tempere com limão, sal e pimenta. Divida em porções."],tip:"1 kg rende ~8 porções de 125g. Base pra omelete, tapioca, salada e macarrão."},
+  {name:"Brócolis Refogado com Alho",cat:"Vegetal",freeze:false,ingr:"1 cabeça brócolis · 3 dentes alho · azeite · sal · pimenta",steps:["Separe em buquês. Branqueie em água fervente 2 min.","Passe em água gelada. Escorra bem.","Refogue alho fatiado no azeite até dourar.","Adicione o brócolis, tempere, saltei 3 min."],tip:"Congele o brócolis branqueado e refogar na hora."},
+  {name:"Molho de Tomate Caseiro",cat:"Outros",freeze:true,ingr:"4 tomates · 1 cebola · 3 dentes alho · azeite · sal · manjericão",steps:["Refogue cebola e alho no azeite por 3 min.","Adicione tomates picados sem sementes.","Cozinhe fogo médio 20 min mexendo.","Tempere com sal e manjericão."],tip:"Congele em porções de 3 col. de sopa. Dura 4 meses."},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+function getTodayIdx(){const d=new Date().getDay();return d===0?6:d-1}
+function load(k,fb){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb}catch{return fb}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function todayStr(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function pad(n){return String(n).padStart(2,'0')}
+
+let state={
+  tab:'dashboard',
+  day:getTodayIdx(),
+  checked:load('dieta_checked',{}),
+  shopChecked:load('dieta_shop',{}),
+  showInstall:!load('install_dismissed',false),
+  purchases:load('fin_purchases',[]),
+  finDate:todayStr(),
+  finForm:{name:'',cat:FIN_CATS[0],val:''},
+  finMeta:load('fin_meta',300),
+  finMetaEdit:false,
+  recipeFilter:'Todos',
+  expanded:{},
+  weights:load('weights',[]),  // [{date,val}]
+  weightInput:'',
+  evals:load('evals',{}),      // {date: {humor,energia,fome,nota}}
+  evalDay:todayStr(),
+  evalForm:load('eval_form_tmp',{humor:'',energia:'',fome:'',nota:''}),
+  prepStock:load('prep_stock',{}), // {itemName: qty}
+};
+
+function setState(patch){
+  state={...state,...patch};
+  if('checked' in patch) save('dieta_checked',state.checked);
+  if('shopChecked' in patch) save('dieta_shop',state.shopChecked);
+  if('purchases' in patch) save('fin_purchases',state.purchases);
+  if('weights' in patch) save('weights',state.weights);
+  if('evals' in patch) save('evals',state.evals);
+  if('evalForm' in patch) save('eval_form_tmp',state.evalForm);
+  if('prepStock' in patch) save('prep_stock',state.prepStock);
+  if('finMeta' in patch) save('fin_meta',state.finMeta);
+  if('showInstall' in patch) save('install_dismissed',!state.showInstall);
+  render();
+}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function getDayProg(dayName){
+  const dm=MEALS[dayName];let total=0,done=0;
+  MEAL_ORDER.forEach(m=>dm[m].forEach((_,i)=>{total++;if(state.checked[`${dayName}__${m}__${i}`])done++;}));
+  return total===0?0:Math.round(done/total*100);
+}
+function fmtBRL(v){return 'R$ '+Number(v).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function fmtDate(str){if(!str)return '';const[y,m,d]=str.split('-');return `${d}/${m}`}
+
+function ring(pct,color,label){
+  const r=22,circ=2*Math.PI*r,offset=circ-(pct/100)*circ;
+  const lbl=label!==undefined?label:`${pct}%`;
+  return `<div class="ring-wrap"><svg width="52" height="52" viewBox="0 0 52 52"><circle class="ring-bg" cx="26" cy="26" r="${r}"/><circle class="ring-fill" cx="26" cy="26" r="${r}" stroke="${color}" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"/></svg><div class="ring-lbl" style="color:${color}">${lbl}</div></div>`;
+}
+function chkbox(checked,blue){
+  const cls=['chkbox',checked?'chk':'',blue&&!checked?'blue':''].join(' ').trim();
+  return `<div class="${cls}"><svg width="10" height="8" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="#0f1117" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+}
+function tabs(active){
+  const items=[['dashboard','📊','Dashboard'],['dieta','🍽️','Dieta'],['compras','🛒','Compras'],['receitas','📖','Receitas'],['financeiro','💰','Financeiro']];
+  return `<div class="tabs">${items.map(([id,ic,lb])=>`<button class="tab-btn${active===id?' active':''}" onclick="setTab('${id}')">${ic} ${lb}</button>`).join('')}</div>`;
+}
+function hdr(title,ringHtml,activeTab){
+  return `<div class="hdr"><div style="max-width:480px;margin:0 auto"><div class="hdr-top"><div><div class="hdr-label">Plano Alimentar</div><div class="hdr-title">${title}</div></div>${ringHtml}</div>${tabs(activeTab)}</div></div>`;
+}
+
+// Streak calc
+function calcStreak(){
+  let streak=0,d=new Date();
+  for(let i=0;i<365;i++){
+    const ds=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const dayIdx=d.getDay()===0?6:d.getDay()-1;
+    const dayName=DAYS[dayIdx];
+    const prog=calcProgForDate(dayName,ds);
+    if(prog===100){streak++;d.setDate(d.getDate()-1);}
+    else if(i===0){d.setDate(d.getDate()-1);} // today not done yet, go back
+    else break;
+  }
+  return streak;
+}
+function calcProgForDate(dayName,_dateStr){
+  // Uses global checked keyed by day name (not date) — approximate
+  return getDayProg(dayName);
+}
+
+// Weight chart SVG
+function weightChart(weights){
+  if(weights.length<2) return `<div class="no-data">Registre ao menos 2 pesagens para ver o gráfico</div>`;
+  const sorted=[...weights].sort((a,b)=>a.date.localeCompare(b.date)).slice(-12);
+  const vals=sorted.map(w=>w.val);
+  const min=Math.min(...vals)-1,max=Math.max(...vals)+1;
+  const W=320,H=100,pad=20;
+  const x=(i)=>pad+(i/(sorted.length-1))*(W-pad*2);
+  const y=(v)=>H-pad-((v-min)/(max-min))*(H-pad*2);
+  const pts=sorted.map((w,i)=>`${x(i)},${y(w.val)}`).join(' ');
+  const area=`${pad},${H-pad} `+sorted.map((w,i)=>`${x(i)},${y(w.val)}`).join(' ')+` ${W-pad},${H-pad}`;
+  const labels=sorted.filter((_,i)=>i===0||i===sorted.length-1||i===Math.floor(sorted.length/2))
+    .map((w,_,arr)=>{const oi=sorted.indexOf(w);return `<text x="${x(oi)}" y="${H-2}" fill="#3a4050" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">${fmtDate(w.date)}</text>`;}).join('');
+  const valLabels=sorted.map((w,i)=>`<text x="${x(i)}" y="${y(w.val)-4}" fill="#7a8090" font-size="7" text-anchor="middle" font-family="'DM Mono',monospace">${w.val}</text>`).join('');
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6fbf8a" stop-opacity=".3"/><stop offset="100%" stop-color="#6fbf8a" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${area}" fill="url(#wg)"/>
+    <polyline points="${pts}" fill="none" stroke="#6fbf8a" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${sorted.map((w,i)=>`<circle cx="${x(i)}" cy="${y(w.val)}" r="3" fill="#6fbf8a"/>`).join('')}
+    ${valLabels}${labels}
+  </svg></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ═══════════════════════════════════════════════════════
+function renderDashboard(){
+  const streak=calcStreak();
+  const todayProg=getDayProg(DAYS[getTodayIdx()]);
+
+  // This week days
+  const now=new Date();
+  const weekDays=DAYS.map((d,i)=>{
+    const prog=getDayProg(d);
+    const isToday=i===getTodayIdx();
+    return `<div class="dash-day-cell${prog===100?' complete':''}">
+      <div class="dash-day-label">${d.slice(0,3)}</div>
+      <div class="dash-day-pct">${prog===100?'✓':prog>0?prog+'%':'—'}</div>
+      ${isToday?`<div style="width:4px;height:4px;border-radius:50%;background:var(--gold);margin:3px auto 0"></div>`:''}
+    </div>`;
+  }).join('');
+
+  // Latest weight
+  const sortedW=[...state.weights].sort((a,b)=>b.date.localeCompare(a.date));
+  const latestW=sortedW[0];
+  const prevW=sortedW[1];
+  const wDiff=latestW&&prevW?(latestW.val-prevW.val).toFixed(1):null;
+
+  // Week spend
+  const weekStart=new Date(now);
+  weekStart.setDate(now.getDate()-now.getDay()+(now.getDay()===0?-6:1));
+  weekStart.setHours(0,0,0,0);
+  const weekSpend=state.purchases.filter(p=>new Date(p.date+'T00:00:00')>=weekStart).reduce((a,p)=>a+p.val,0);
+  const metaPct=Math.min(Math.round(weekSpend/state.finMeta*100),100);
+
+  // Recent evals
+  const evalEntries=Object.entries(state.evals).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,3);
+
+  const evalList=evalEntries.length===0
+    ?`<div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);padding:12px 0;text-align:center">nenhuma avaliação ainda</div>`
+    :evalEntries.map(([date,ev])=>`<div class="dash-eval-row">
+        <div>
+          <div class="dash-eval-date">${fmtDate(date)}</div>
+          ${ev.nota?`<div class="dash-eval-note">"${ev.nota}"</div>`:''}
         </div>
-    </main>
+        <div class="dash-eval-icons">
+          ${ev.humor?`<span title="Humor">${ev.humor}</span>`:''}
+          ${ev.energia?`<span title="Energia">${ev.energia}</span>`:''}
+          ${ev.fome?`<span title="Fome">${ev.fome}</span>`:''}
+        </div>
+      </div>`).join('');
 
-    <!-- Menu Inferior Fixo -->
-    <nav class="fixed bottom-0 w-full bg-[#050505]/90 backdrop-blur-lg border-t border-white/10 p-4 flex justify-around">
-        <button onclick="showPage('home')" class="text-white font-semibold">Home</button>
-        <button onclick="showPage('dieta')" class="text-gray-500">Dieta</button>
-        <button onclick="showPage('compras')" class="text-gray-500">Compras</button>
-    </nav>
+  return hdr('Dashboard',ring(todayProg,todayProg===100?'#6fbf8a':'#c9a84c'),'dashboard')+
+  `<div class="scroll">
+    ${state.showInstall?renderInstall():''}
 
-    <script>
-        function showPage(pageId) {
-            // Lógica simples para alternar visibilidade
-            document.querySelectorAll('main').forEach(el => el.style.display = 'none');
-            document.getElementById(pageId).style.display = 'block';
-        }
-    </script>
+    <div class="stat-grid" style="padding-top:13px">
+      <div class="stat-card accent">
+        <div class="stat-label">Streak</div>
+        <div class="stat-val">${streak} 🔥</div>
+        <div class="stat-sub">dias consecutivos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Hoje</div>
+        <div class="stat-val ${todayProg===100?'green':''}">${todayProg}%</div>
+        <div class="stat-sub">${DAYS[getTodayIdx()]}-feira</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Peso atual</div>
+        <div class="stat-val small green">${latestW?latestW.val+'kg':'—'}</div>
+        <div class="stat-sub">${wDiff!==null?(parseFloat(wDiff)<=0?'▼ '+Math.abs(wDiff)+'kg':'▲ '+wDiff+'kg'):'registre seu peso'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Gasto semana</div>
+        <div class="stat-val small">${fmtBRL(weekSpend)}</div>
+        <div class="stat-sub">meta: ${fmtBRL(state.finMeta)}</div>
+      </div>
+    </div>
+
+    <div style="padding:10px 16px 0">
+      <div class="meta-row">
+        <div class="meta-label">Meta semana</div>
+        <div class="meta-track"><div class="meta-fill" style="width:${metaPct}%;background:${metaPct>90?'#d47e8a':metaPct>70?'#c9a84c':'#6fbf8a'}"></div></div>
+        <div class="meta-label">${metaPct}%</div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <div class="dash-section-title">Semana</div>
+      <div class="dash-week-grid">${weekDays}</div>
+    </div>
+
+    <div class="dash-section" style="margin-top:4px">
+      <div class="dash-section-title">Progresso de peso</div>
+      ${weightChart(state.weights)}
+    </div>
+
+    <div class="dash-section" style="margin-top:4px">
+      <div class="dash-section-title">Avaliações recentes</div>
+      <div class="dash-eval-list">${evalList}</div>
+    </div>
+
+    <div style="height:8px"></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER DIETA
+// ═══════════════════════════════════════════════════════
+function renderDieta(){
+  const day=DAYS[state.day];
+  const meals=MEALS[day];
+  const pct=getDayProg(day);
+  const isWE=day==='Sábado'||day==='Domingo';
+
+  const dayPicker=`<div class="day-picker">${DAYS.map((d,i)=>{
+    const p=getDayProg(d),sel=i===state.day,tod=i===getTodayIdx();
+    return `<button class="day-btn${sel?' sel':''}" onclick="setDay(${i})"><div class="day-name">${d.slice(0,3)}</div>${tod?'<div class="day-dot"></div>':''}<div class="day-prog${p===100?' done':p>0?' part':''}">${p===100?'✓':p>0?p+'%':'·'}</div></button>`;
+  }).join('')}</div>`;
+
+  // Eval for this day
+  const dayDateStr=getTodayIdx()===state.day?todayStr():'';
+  const dayEval=dayDateStr?state.evals[dayDateStr]:null;
+
+  const evalBadge=dayEval
+    ?`<div style="display:flex;gap:6px;padding:8px 16px;background:rgba(111,191,138,.04);border-bottom:1px solid var(--border)"><span style="font-family:var(--mono);font-size:9px;color:var(--text-faint);margin-right:2px">HOJE:</span>${dayEval.humor||''}${dayEval.energia||''}${dayEval.fome||''}<span style="font-family:var(--mono);font-size:9px;color:var(--text-faint);margin-left:auto;cursor:pointer" onclick="setTab('dieta_eval')">editar</span></div>`:'';
+
+  const mealCards=MEAL_ORDER.map(meal=>{
+    const items=meals[meal];
+    const done=items.filter((_,i)=>state.checked[`${day}__${meal}__${i}`]).length;
+    const allDone=done===items.length;
+    const rows=items.map((food,i)=>{
+      const key=`${day}__${meal}__${i}`;
+      const isCk=!!state.checked[key],isCr=food.item==='Creatina';
+      return `<div class="row${isCk?' chk':''}" onclick="toggleFood('${key}')">${chkbox(isCk,isCr)}<span class="fname${isCr?' cr':''}">${food.item}</span><span class="fqty">${food.qty}</span></div>`;
+    }).join('');
+    return `<div class="card${allDone?' done':''}"><div class="card-hdr"><div class="card-title"><span>${MEAL_ICONS[meal]}</span>${meal}</div><div class="card-count">${done}/${items.length}</div></div>${rows}</div>`;
+  }).join('');
+
+  const banner=pct===100?`<div class="done-banner"><div class="di">🏆</div><div class="dt">Dieta completa hoje!</div><div class="ds">CONSISTÊNCIA É A CHAVE · CONTINUE AMANHÃ</div></div>`:'';
+
+  // Eval form (today only)
+  const evalForm=state.day===getTodayIdx()?renderEvalForm():'';
+
+  return hdr(isWE?day:`${day}-feira`,ring(pct,pct===100?'#6fbf8a':'#c9a84c'),'dieta')+
+    `<div class="scroll">${evalBadge}${dayPicker}<div class="wrap">${mealCards}${banner}</div>${evalForm}</div>`;
+}
+
+function renderEvalForm(){
+  const f=state.evalForm;
+  const opts={
+    humor:[['😄','Ótimo'],['🙂','Bom'],['😐','Neutro'],['😔','Ruim']],
+    energia:[['⚡','Alta'],['🔋','Normal'],['🪫','Baixa']],
+    fome:[['😤','Muita'],['😊','Normal'],['😌','Pouca']],
+  };
+  const rows=Object.entries(opts).map(([key,list])=>`
+    <div style="margin-bottom:10px">
+      <div class="eval-label">${key.charAt(0).toUpperCase()+key.slice(1)}</div>
+      <div class="eval-opts">${list.map(([em,lb])=>`<button class="eval-opt${f[key]===em?' sel':''}" onclick="setEvalOpt('${key}','${em}')">${em} ${lb}</button>`).join('')}</div>
+    </div>`).join('');
+
+  return `<div class="eval-section">
+    <div class="section-title">Avaliação do dia</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px">
+      ${rows}
+      <div style="margin-bottom:10px">
+        <div class="eval-label">Nota livre</div>
+        <input type="text" placeholder="Como você se sentiu hoje..." value="${f.nota||''}" oninput="setEvalOpt('nota',this.value)" style="background:#0f1520;border:1px solid var(--border2);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;width:100%"/>
+      </div>
+      <button class="eval-save" onclick="saveEval()">SALVAR AVALIAÇÃO</button>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER COMPRAS
+// ═══════════════════════════════════════════════════════
+function renderCompras(){
+  const total=SHOPPING.reduce((a,c)=>a+c.items.length,0);
+  const done=Object.values(state.shopChecked).filter(Boolean).length;
+  const pct=Math.round(done/total*100);
+  const cards=SHOPPING.map((cat,ci)=>{
+    const catDone=cat.items.filter((_,i)=>state.shopChecked[`${ci}_${i}`]).length;
+    const allDone=catDone===cat.items.length;
+    const rows=cat.items.map((food,ii)=>{
+      const key=`${ci}_${ii}`,isCk=!!state.shopChecked[key];
+      return `<div class="row${isCk?' chk':''}" onclick="toggleShop('${key}')">${chkbox(isCk,false)}<div class="shop-info"><div class="shop-irow"><span class="sname">${food.item}</span><span class="sqty">${food.qty}</span></div>${food.tip?`<div class="stip">${food.tip}</div>`:''}</div></div>`;
+    }).join('');
+    return `<div class="card${allDone?' done':''}"><div class="card-hdr"><div class="card-title" style="color:${allDone?'#6fbf8a':cat.color}">${cat.cat}</div><div class="card-count">${catDone}/${cat.items.length}</div></div>${rows}</div>`;
+  }).join('');
+  const banner=done===total?`<div class="done-banner"><div class="di">🛒</div><div class="dt">Compras completas!</div><div class="ds">SEMANA GARANTIDA · AGORA É SÓ EXECUTAR</div></div>`:'';
+  return hdr('Lista de Compras',ring(pct,'#7eb8d4'),'compras')+
+    `<div class="scroll"><div class="shop-sum"><div><div class="sum-label">Semana Completa</div><div class="sum-count">${done} de ${total} itens</div></div><button class="clr-btn" onclick="clearShop()">Limpar</button></div><div class="wrap">${cards}${banner}</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER RECEITAS
+// ═══════════════════════════════════════════════════════
+function renderReceitas(){
+  const allCats=['Todos',...new Set(RECIPES.map(r=>r.cat)),'❄️ Congelável'];
+  const f=state.recipeFilter;
+  const filtered=RECIPES.filter(r=>f==='Todos'?true:f==='❄️ Congelável'?r.freeze:r.cat===f);
+  const filters=`<div class="recipe-filter">${allCats.map(c=>`<button class="filt-btn${f===c?' active':''}" onclick="setRecipeFilter('${c}')">${c}</button>`).join('')}</div>`;
+  const cards=filtered.map((r,i)=>{
+    const key=`r_${i}_${r.name.replace(/\s/g,'_')}`;
+    const isExp=!!state.expanded[key];
+    const steps=r.steps.map((s,si)=>`<div class="recipe-step"><span class="step-num">${si+1}</span><span>${s}</span></div>`).join('');
+    return `<div class="recipe-card"><div class="recipe-card-hdr"><span class="recipe-name">${r.name}</span><div class="recipe-badges">${r.freeze?'<span class="badge-freeze">❄️</span>':''}<span class="badge-cat">${r.cat}</span></div></div>${isExp?`<div class="recipe-body"><div class="recipe-section">Ingredientes</div><div class="recipe-ingr">${r.ingr}</div><div class="recipe-section">Modo de preparo</div><div>${steps}</div>${r.tip?`<div class="recipe-tip">${r.tip}</div>`:''}</div>`:''}<button class="recipe-expand" onclick="toggleRecipe('${key}')">${isExp?'▲ Fechar':'▼ Ver receita'}</button></div>`;
+  }).join('');
+  return hdr('Receitas',ring(0,'#6fbf8a','📖'),'receitas')+`<div class="scroll">${filters}<div class="recipes-wrap">${cards}</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER FINANCEIRO
+// ═══════════════════════════════════════════════════════
+function renderFinanceiro(){
+  const ps=state.purchases;
+  const now=new Date();
+  const weekStart=new Date(now);
+  weekStart.setDate(now.getDate()-now.getDay()+(now.getDay()===0?-6:1));
+  weekStart.setHours(0,0,0,0);
+  const thisWeekPs=ps.filter(p=>new Date(p.date+'T00:00:00')>=weekStart);
+  const weekTotal=thisWeekPs.reduce((a,p)=>a+p.val,0);
+  const allTotal=ps.reduce((a,p)=>a+p.val,0);
+  const metaPct=Math.min(Math.round(weekTotal/state.finMeta*100),100);
+  const metaColor=metaPct>90?'#d47e8a':metaPct>70?'#c9a84c':'#6fbf8a';
+
+  const catTotals={};
+  thisWeekPs.forEach(p=>{catTotals[p.cat]=(catTotals[p.cat]||0)+p.val});
+  const maxCat=Math.max(...Object.values(catTotals),1);
+
+  const weeklyMap={};
+  ps.forEach(p=>{
+    const d=new Date(p.date+'T00:00:00');
+    const ws=new Date(d);ws.setDate(d.getDate()-d.getDay()+(d.getDay()===0?-6:1));
+    const wk=`${ws.getFullYear()}-${pad(ws.getMonth()+1)}-${pad(ws.getDate())}`;
+    weeklyMap[wk]=(weeklyMap[wk]||0)+p.val;
+  });
+  const sortedWeeks=Object.entries(weeklyMap).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,6);
+
+  const selDate=new Date(state.finDate+'T00:00:00');
+  const y=selDate.getFullYear(),m=selDate.getMonth();
+  const firstDay=new Date(y,m,1).getDay();
+  const offset=firstDay===0?6:firstDay-1;
+  const dim=new Date(y,m+1,0).getDate();
+  const mNames=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const purchaseDates=new Set(ps.map(p=>p.date));
+  const tod=todayStr();
+  let cells='';
+  for(let i=0;i<offset;i++) cells+=`<div class="cal-day empty"></div>`;
+  for(let d2=1;d2<=dim;d2++){
+    const ds=`${y}-${pad(m+1)}-${pad(d2)}`;
+    cells+=`<div class="cal-day${ds===tod?' today':''}${purchaseDates.has(ds)?' has-p':''}${ds===state.finDate?' sel':''}" onclick="setFinDate('${ds}')"><div class="cal-num">${d2}</div>${purchaseDates.has(ds)?'<div class="cal-dot"></div>':''}</div>`;
+  }
+
+  const selPs=ps.filter(p=>p.date===state.finDate);
+  const selTotal=selPs.reduce((a,p)=>a+p.val,0);
+  const purchaseList=selPs.length===0
+    ?`<div style="padding:14px;font-family:var(--mono);font-size:10px;color:var(--text-faint);text-align:center">nenhum lançamento neste dia</div>`
+    :selPs.map(p=>`<div class="purchase-item"><div class="pi-left"><div class="pi-name">${p.name}</div><div class="pi-cat">${p.cat}</div></div><div class="pi-val">${fmtBRL(p.val)}</div><button class="pi-del" onclick="deletePurchase('${p.id}')">×</button></div>`).join('');
+
+  const catBars=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`<div class="cat-bar-row"><div class="cat-bar-name">${cat.replace(/^[^\s]+\s/,'')}</div><div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round(val/maxCat*100)}%"></div></div><div class="cat-bar-val">${fmtBRL(val)}</div></div>`).join('');
+
+  const histRows=sortedWeeks.map(([wk,val])=>{
+    const d3=new Date(wk+'T00:00:00');
+    return `<div class="hist-row"><div class="hist-week">Semana ${pad(d3.getDate())}/${pad(d3.getMonth()+1)}</div><div style="display:flex;align-items:center;gap:10px"><div class="hist-val">${fmtBRL(val)}</div><div style="font-family:var(--mono);font-size:9px;color:${val>state.finMeta?'#d47e8a':'#6fbf8a'}">${val>state.finMeta?'acima':'ok'}</div></div></div>`;
+  }).join('');
+
+  const f=state.finForm;
+  const metaInput=state.finMetaEdit
+    ?`<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="number" value="${state.finMeta}" id="meta-input" style="background:#0f1520;border:1px solid var(--border2);border-radius:8px;padding:6px 10px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100px"/><button onclick="saveMeta()" style="padding:6px 12px;background:var(--gold-dim);border:none;border-radius:8px;color:#e8e0d0;font-family:var(--mono);font-size:10px;cursor:pointer">OK</button><button onclick="setState({finMetaEdit:false})" style="padding:6px 10px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--text-dim);font-family:var(--mono);font-size:10px;cursor:pointer">×</button></div>`
+    :`<div style="font-family:var(--mono);font-size:9px;color:var(--text-faint);margin-top:4px;cursor:pointer" onclick="setState({finMetaEdit:true})">Meta: ${fmtBRL(state.finMeta)} · <span style="color:var(--gold)">editar</span></div>`;
+
+  return hdr('Financeiro',ring(metaPct,metaColor),'financeiro')+
+  `<div class="scroll">
+    <div class="fin-stats">
+      <div class="stat-card">
+        <div class="stat-label">Esta semana</div>
+        <div class="stat-val small" style="color:${metaColor}">${fmtBRL(weekTotal)}</div>
+        ${metaInput}
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total geral</div>
+        <div class="stat-val small">${fmtBRL(allTotal)}</div>
+        <div class="stat-sub">${ps.length} lançamentos</div>
+      </div>
+    </div>
+
+    ${Object.keys(catTotals).length>0?`<div class="cat-bars" style="margin-top:13px"><div class="sum-label" style="margin-bottom:8px">Por categoria · semana atual</div>${catBars}</div>`:''}
+
+    <div class="cal-wrap" style="margin-top:13px">
+      <div class="cal-title-row"><div class="cal-month">${mNames[m]} ${y}</div><div class="cal-nav"><button onclick="prevMonth()">‹</button><button onclick="nextMonth()">›</button></div></div>
+      <div class="cal-grid">${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}${cells}</div>
+    </div>
+
+    <div class="add-form" style="margin-top:13px">
+      <div class="add-form-hdr"><span>+ Lançar · ${state.finDate.split('-').reverse().join('/')}</span>${selTotal>0?`<span style="font-family:var(--mono);font-size:10px">${fmtBRL(selTotal)}</span>`:''}</div>
+      <div class="add-form-body">
+        <div class="field-row">
+          <div class="field" style="flex:2"><label>Item</label><input type="text" id="fin-name" value="${f.name}" placeholder="ex: Peito de frango" oninput="updateFinForm('name',this.value)"/></div>
+          <div class="field"><label>R$</label><input type="number" id="fin-val" value="${f.val}" placeholder="0,00" min="0" step="0.01" oninput="updateFinForm('val',this.value)"/></div>
+        </div>
+        <div class="field-row"><div class="field"><label>Categoria</label><select id="fin-cat" onchange="updateFinForm('cat',this.value)">${FIN_CATS.map(c=>`<option value="${c}"${f.cat===c?' selected':''}>${c}</option>`).join('')}</select></div></div>
+        <button class="add-btn" onclick="addPurchase()">ADICIONAR</button>
+      </div>
+      <div style="padding:0 16px 12px">${purchaseList}</div>
+    </div>
+
+    ${sortedWeeks.length>0?`<div class="history" style="margin-top:5px"><div class="sum-label" style="margin-bottom:8px">Histórico semanal</div>${histRows}</div>`:''}
+    <div style="height:20px"></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER PESO (inside dashboard / dieta)
+// ═══════════════════════════════════════════════════════
+function renderPesoSection(){
+  const sorted=[...state.weights].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const log=sorted.length===0
+    ?`<div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);padding:10px 0;text-align:center">nenhum registro ainda</div>`
+    :sorted.map((w,i)=>{
+      const next=sorted[i+1];
+      const diff=next?(w.val-next.val).toFixed(1):null;
+      const diffColor=diff===null?'':parseFloat(diff)<0?'#6fbf8a':'#d47e8a';
+      return `<div class="wlog-row"><div class="wlog-date">${fmtDate(w.date)}</div><div class="wlog-right">${diff!==null?`<div class="wlog-diff" style="color:${diffColor}">${parseFloat(diff)<=0?'▼':'▲'}${Math.abs(diff)}kg</div>`:''}<div class="wlog-val">${w.val} kg</div><button class="wlog-del" onclick="deleteWeight('${w.date}')">×</button></div></div>`;
+    }).join('');
+
+  return `<div class="weight-section">
+    <div class="section-title">Registrar peso</div>
+    <div class="weight-input-row">
+      <input type="number" step="0.1" min="40" max="300" placeholder="103.5" value="${state.weightInput}" oninput="setState({weightInput:this.value})" id="weight-inp"/>
+      <div class="w-unit">kg</div>
+      <button class="w-add-btn" onclick="addWeight()">Registrar</button>
+    </div>
+    ${weightChart(state.weights)}
+    <div class="weight-log" style="margin-top:10px">${log}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER MEAL PREP
+// ═══════════════════════════════════════════════════════
+function renderMealPrep(){
+  const cards=PREP_ITEMS.map(item=>{
+    const qty=state.prepStock[item.name]||0;
+    const isDone=qty>0;
+    return `<div class="prep-card">
+      <div class="prep-hdr">
+        <div class="prep-title">${item.name}</div>
+        <div class="prep-badge ${isDone?'done':'todo'}">${isDone?'preparado':'pendente'}</div>
+      </div>
+      <div class="prep-portions">
+        <span>${item.unit}</span>
+        <div class="prep-controls">
+          <button class="prep-btn" onclick="adjPrep('${item.name}',-1)">−</button>
+          <div class="prep-num">${qty}</div>
+          <button class="prep-btn" onclick="adjPrep('${item.name}',1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const total=PREP_ITEMS.length;
+  const done=PREP_ITEMS.filter(i=>(state.prepStock[i.name]||0)>0).length;
+  const pct=Math.round(done/total*100);
+
+  return `<div class="wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div><div class="sum-label">Meal Prep</div><div style="font-family:var(--mono);font-size:12px;color:var(--text)">${done}/${total} itens preparados</div></div>
+      <div style="font-family:var(--mono);font-size:11px;color:${pct===100?'#6fbf8a':'#c9a84c'}">${pct}%</div>
+    </div>
+    ${cards}
+    <button onclick="clearPrep()" style="width:100%;padding:8px;background:transparent;border:1px solid var(--border2);border-radius:8px;font-family:var(--mono);font-size:10px;color:var(--text-faint);cursor:pointer;margin-top:4px">Zerar estoque</button>
+  </div>`;
+}
+
+function renderInstall(){
+  return `<div class="install"><span>📲</span><span>Toque em <strong>Compartilhar</strong> → <strong>Adicionar à Tela de Início</strong></span><button class="inst-close" onclick="dismissInstall()">×</button></div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER MAIN
+// ═══════════════════════════════════════════════════════
+function render(){
+  const map={
+    dashboard:renderDashboard,
+    dieta:renderDieta,
+    compras:renderCompras,
+    receitas:renderReceitas,
+    financeiro:renderFinanceiro,
+  };
+  // Special sub-tabs handled inside dieta
+  if(state.tab==='peso'){
+    const pct=0;
+    document.getElementById('app').innerHTML=hdr('Peso & Evolução',ring(pct,'#6fbf8a','⚖️'),'dieta')+`<div class="scroll">${renderPesoSection()}</div>`;
+    return;
+  }
+  if(state.tab==='mealprep'){
+    const done=PREP_ITEMS.filter(i=>(state.prepStock[i.name]||0)>0).length;
+    const pct=Math.round(done/PREP_ITEMS.length*100);
+    document.getElementById('app').innerHTML=hdr('Meal Prep',ring(pct,'#7eb8d4'),'dieta')+`<div class="scroll">${renderMealPrep()}</div>`;
+    return;
+  }
+  document.getElementById('app').innerHTML=(map[state.tab]||renderDashboard)();
+}
+
+// ═══════════════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════════════
+window.setTab=t=>setState({tab:t});
+window.setDay=i=>setState({day:i});
+window.toggleFood=key=>{const c={...state.checked};c[key]=!c[key];setState({checked:c})};
+window.toggleShop=key=>{const c={...state.shopChecked};c[key]=!c[key];setState({shopChecked:c})};
+window.clearShop=()=>setState({shopChecked:{}});
+window.dismissInstall=()=>setState({showInstall:false});
+window.setRecipeFilter=f=>setState({recipeFilter:f});
+window.toggleRecipe=key=>{const e={...state.expanded};e[key]=!e[key];setState({expanded:e})};
+window.setFinDate=d=>setState({finDate:d});
+window.updateFinForm=(k,v)=>setState({finForm:{...state.finForm,[k]:v}});
+window.prevMonth=()=>{const d=new Date(state.finDate+'T00:00:00');d.setDate(1);d.setMonth(d.getMonth()-1);setState({finDate:`${d.getFullYear()}-${pad(d.getMonth()+1)}-01`})};
+window.nextMonth=()=>{const d=new Date(state.finDate+'T00:00:00');d.setDate(1);d.setMonth(d.getMonth()+1);setState({finDate:`${d.getFullYear()}-${pad(d.getMonth()+1)}-01`})};
+window.addPurchase=()=>{
+  const f=state.finForm;
+  if(!f.name.trim()||!f.val||isNaN(parseFloat(f.val)))return;
+  const p={id:Date.now().toString(),date:state.finDate,name:f.name.trim(),cat:f.cat,val:parseFloat(f.val)};
+  setState({purchases:[...state.purchases,p],finForm:{name:'',cat:FIN_CATS[0],val:''}});
+  setTimeout(()=>{const el=document.getElementById('fin-name');if(el)el.focus()},50);
+};
+window.deletePurchase=id=>setState({purchases:state.purchases.filter(p=>p.id!==id)});
+window.saveMeta=()=>{const el=document.getElementById('meta-input');if(el&&!isNaN(parseFloat(el.value)))setState({finMeta:parseFloat(el.value),finMetaEdit:false})};
+window.addWeight=()=>{
+  const v=parseFloat(state.weightInput);
+  if(isNaN(v)||v<30||v>300)return;
+  const today=todayStr();
+  const filtered=state.weights.filter(w=>w.date!==today);
+  setState({weights:[...filtered,{date:today,val:v}].sort((a,b)=>a.date.localeCompare(b.date)),weightInput:''});
+};
+window.deleteWeight=date=>setState({weights:state.weights.filter(w=>w.date!==date)});
+window.setEvalOpt=(k,v)=>setState({evalForm:{...state.evalForm,[k]:v}});
+window.saveEval=()=>{
+  const f=state.evalForm;
+  if(!f.humor&&!f.energia&&!f.fome&&!f.nota)return;
+  const ev={...state.evals,[state.evalDay]:{...f}};
+  setState({evals:ev,evalForm:{humor:'',energia:'',fome:'',nota:''}});
+};
+window.adjPrep=(name,delta)=>{
+  const s={...state.prepStock};
+  s[name]=Math.max(0,(s[name]||0)+delta);
+  setState({prepStock:s});
+};
+window.clearPrep=()=>setState({prepStock:{}});
+
+// Quick-nav buttons on dashboard
+window.goTo=t=>setState({tab:t});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+render();
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+
 </body>
 </html>
