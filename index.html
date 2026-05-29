@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Fluxo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <section class="screen active" id="home">
+
+    <div class="top">
+      <div>
+        <p>Seu progresso hoje</p>
+        <h1>Fluxo</h1>
+      </div>
+
+      <div class="profile">
+        <i data-lucide="user"></i>
+      </div>
+    </div>
+
+    <div class="hero">
+      <small>Meta diária</small>
+
+      <h2>
+        1.840
+        <span>kcal</span>
+      </h2>
+
+      <div class="bar">
+        <div></div>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-top">
+          <p>Água</p>
+          <i data-lucide="droplets"></i>
+        </div>
+
+        <h3>3.1L</h3>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <p>Proteína</p>
+          <i data-lucide="beef"></i>
+        </div>
+
+        <h3>152g</h3>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="screen" id="diet">
+
+    <div class="section-title">
+      <h4>Nova refeição</h4>
+    </div>
+
+    <div class="form">
+
+      <input type="text" id="mealName" placeholder="Nome da refeição">
+
+      <input type="text" id="mealDesc" placeholder="Descrição">
+
+      <button onclick="addMeal()">
+        Adicionar refeição
+      </button>
+
+    </div>
+
+    <div id="meals" class="meals"></div>
+
+  </section>
+
+  <section class="screen" id="shopping">
+
+    <div class="section-title">
+      <h4>Compras</h4>
+    </div>
+
+    <div class="shopping">
+
+      <div class="item">
+        <strong>Frango</strong>
+        <span>2kg</span>
+      </div>
+
+      <div class="item">
+        <strong>Ovos</strong>
+        <span>30 un.</span>
+      </div>
+
+      <div class="item">
+        <strong>Aveia</strong>
+        <span>1 pacote</span>
+      </div>
+
+      <div class="item">
+        <strong>Banana</strong>
+        <span>12 un.</span>
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="screen" id="finance">
+
+    <div class="section-title">
+      <h4>Financeiro</h4>
+    </div>
+
+    <div class="card finance-card">
+      <p>Gastos da semana</p>
+      <h3>R$ 287</h3>
+    </div>
+
+    <div class="card finance-card">
+      <p>Economia com marmitas</p>
+      <h3>R$ 142</h3>
+    </div>
+
+  </section>
+
+  <section class="screen" id="profile">
+
+    <div class="section-title">
+      <h4>Perfil</h4>
+    </div>
+
+    <div class="card profile-card">
+      <p>Objetivo</p>
+      <h3>Hipertrofia + emagrecimento</h3>
+    </div>
+
+  </section>
+
+</div>
+
+<nav class="nav">
+
+  <button class="active" onclick="changeScreen('home', this)">
+    <i data-lucide="house"></i>
+    Home
+  </button>
+
+  <button onclick="changeScreen('diet', this)">
+    <i data-lucide="utensils"></i>
+    Dieta
+  </button>
+
+  <button onclick="changeScreen('shopping', this)">
+    <i data-lucide="shopping-bag"></i>
+    Compras
+  </button>
+
+  <button onclick="changeScreen('finance', this)">
+    <i data-lucide="wallet"></i>
+    Financeiro
+  </button>
+
+  <button onclick="changeScreen('profile', this)">
+    <i data-lucide="user"></i>
+    Perfil
+  </button>
+
+</nav>
+
+<script src="script.js"></script>
+
+</body>
+</html>
